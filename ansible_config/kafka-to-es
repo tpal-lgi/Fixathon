@@ -1,0 +1,692 @@
+---
+kafka_connect_no_of_partitions: 1
+kafka_connect_replication_factor: 1
+
+# ODH-2011: This variable is used to split kafka-to-es
+# in 3 logstash-apps instances, waiting for ES6.
+# If one entry is not in the list, it won't be deployed
+kafka_to_es_topic_division:
+  0:
+    - auth_handler_events
+    - cm-attr-stats
+    - connectivity_tivo_v6_acs_es_co_1d_stats
+    - extrahop-connectivity-tr069-acs-report
+    - extrahop-tr069-acs
+    - extrahop-tr069-acs-raw-logs
+    - oag_events
+    - peal_events
+    - plume_channel_changes
+    - plume_effectiveness_stats
+    - stb-modem-correlation
+    - various_acs_booster_es_co_stats
+    - various_acs_cable_modem_es_co_stats
+    - various_akana_es_lp_report
+    - various_akana_raw_es_lp_report
+    - various_nsi_es_lp_report
+    - various_webseal_raw_es_lp_report
+  1:
+    - acs_compass_es_co_report
+    - akana_events
+    - cmts_stats_gen
+    - cowifi_advanced_reports
+    - eos_stb_modem_es_co_report
+    - hrzgo_stb_cm_topology_es_co_1d_report
+    - isam4mobile_events
+    - modem_group_gen
+    - nsi_events
+    - oag-log-parser
+    - peal-log-parser
+    - pre-modem
+    - radius-log-aaa
+    - servassure-modem-poller
+    - spectrum-hex-datapoints
+    - various_fusion_raw_es_lp_report
+    - webseal-log-parser
+    - webseal_events
+  2:
+    - aem-log-parser
+    - aem_events
+    - connectivity_superpoller_cpe_stats_es_co_1h_report
+    - connectivity_superpoller_us_stats_es_co_1h_report
+    - fusion-log-parser
+    - fusion_events
+    - ingest-samknows-averagejoe
+    - ingest-samknows-dns
+    - ingest-samknows-responsetime
+    - national-cpe-stats
+    - odh_internal
+    - ovd_events
+    - rdkblab-modem
+    - spark_dead_letter_queue
+    - stb-error-parsing
+    - uxp-log-parser
+    - uxp_events
+    - wifi-accounting-stats
+    - wifi-authentication-stats
+  3:
+    - connectivity_superpoller_ds_stats_es_co_1h_report
+    - raw_aem_events
+    - raw_akana_events
+    - raw_auth_events
+    - raw_capp_extrahop_events
+    - raw_fusion_events
+    - raw_isam4mobile_events
+    - raw_nsi_events
+    - raw_oag_events
+    - raw_ovd_events
+    - raw_peal_events
+    - raw_uservices
+    - raw_uxp_events
+    - raw_webseal_events
+    - wifi_assurance_tivo
+    - wifi_assurance_vd
+  4:
+    - connectivity_servassure_macbased_es_co_1d_report
+    - plume_modem_stats
+  5:
+    - plume_client_stats
+  6:
+    - wifi_assurance_vd
+
+  logthrash-test:
+    # `logthrash-test` puts data into ES indices prefixed with `logthrash_test_`, so please make sure you don't steal pipelines from real `logstash-apps` or `logthrash` above
+    - radius-log-aaa # consistent high-bandwidth
+
+kafka_to_es_topic_index_map_tenants:
+
+  - name: acs_compass_es_co_report
+    tenants:
+      - gb
+    index: '{{ tenant }}_prd_acs_compass_report_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_acs_compass_report_v1
+
+  - name: aem-log-parser
+    tenants:
+      - ch
+      - de
+      - gb
+      - pan
+    index: '{{ tenant }}_prd_aem_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_aem_log_v1
+
+  - name: aem_events
+    tenants:
+      - at
+      - ch
+      - gb
+      - pan
+    index: '{{ tenant }}_aem_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_error_v1
+      - odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_log_v1
+
+  - name: akana_events
+    tenants:
+      - de
+      - gb
+    index: '{{ tenant }}_akana_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_akana_ingested_metadata_log_v1
+
+  - name: auth_handler_events
+    tenants:
+      - ch
+      - de
+    index: '{{ tenant }}_auth_handler_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_auth_handler_ingested_metadata_log_v1
+
+  - name: cm-attr-stats
+    tenants:
+      - ch
+      - de
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+    index: '{{ tenant }}_prd_cm_attr_stats'
+    kafka_topics:
+      - odhat_pr_wifi_{{ tenant }}_prd_cm_attr_stats_v1
+
+  - name: cmts_stats_gen
+    tenants:
+      - ch
+      - de
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+    index: wifi_{{ tenant }}_prd_modem_cmts_perf
+    kafka_topics:
+      - odhat_out_wifi_{{ tenant }}_prd_modem_cmts_perf_v1
+
+  - name: connectivity_servassure_macbased_es_co_1d_report
+    tenants:
+      - ch
+      - de
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+    index: '{{ tenant }}_prd_servassure_macbased_log'
+    kafka_topics:
+      - odhat_pr_connectivity_{{ tenant }}_prd_servassure_macbased_log_v1
+
+  - name: connectivity_superpoller_cpe_stats_es_co_1h_report
+    tenants:
+      - gb
+    index: odhat_wifi_{{ tenant }}_prd_superpoller_macbased
+    kafka_topics:
+      - odhat_pr_connectivity_{{ tenant }}_prd_superpoller_cpe_stats_log_v1
+
+  - name: connectivity_superpoller_ds_stats_es_co_1h_report
+    tenants:
+      - gb
+    index: odhat_wifi_{{ tenant }}_prd_superpoller_macbased_ds_frequency
+    kafka_topics:
+      - odhat_pr_connectivity_{{ tenant }}_prd_superpoller_ds_stats_log_v1
+
+  - name: connectivity_superpoller_us_stats_es_co_1h_report
+    tenants:
+      - gb
+    index: odhat_wifi_{{ tenant }}_prd_superpoller_macbased_us_frequency
+    kafka_topics:
+      - odhat_pr_connectivity_{{ tenant }}_prd_superpoller_us_stats_log_v1
+
+  - name: connectivity_tivo_v6_acs_es_co_1d_stats
+    tenants:
+      - gb
+    index: '{{ tenant }}_prd_tivo_v6_acs'
+    kafka_topics:
+      - odhat_pr_eosdtv_{{ tenant }}_prd_tivo_v6_acs_v1
+
+  - name: cowifi_advanced_reports
+    tenants:
+      - gb
+    index: '{{ tenant }}_opennet_nsi_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_cowifi_advanced_reports_v1
+
+  - name: eos_stb_modem_es_co_report
+    tenants:
+      - ch
+      - de
+      - ie
+      - nl
+    index: '{{ tenant }}_prod_f5_multitenant_co_log'
+    kafka_topics:
+      - odhat_pr_network_{{ tenant }}_prod_f5_multitenant_correlation_v1
+
+  - name: extrahop-connectivity-tr069-acs-report
+    tenants:
+      - pan
+    index: '{{ tenant }}_prd_extrahop_acstr069_correlation'
+    kafka_topics:
+      - odhat_in_connectivity_{{ tenant }}_prd_extrahop_acstr069_correlation_v1
+
+  - name: extrahop-tr069-acs
+    tenants:
+      - gb
+    index: odhat_various_{{ tenant }}_prd_acs_booster_http
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_acs_booster_http_v1
+
+  - name: extrahop-tr069-acs-raw-logs
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_extrahop_acstr69_v1
+    kafka_topics:
+      - odhat_in_connectivity_{{ tenant }}_prd_extrahop_acstr69_v1
+
+  - name: fusion-log-parser
+    tenants:
+      - gb
+    index: '{{ tenant }}_prd_fusion_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_fusion_log_v1
+
+  - name: fusion_events
+    tenants:
+      - uk
+    index: '{{ tenant }}_fusion_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_fusion_ingested_metadata_log_v1
+
+  - name: hrzgo_stb_cm_topology_es_co_1d_report
+    tenants:
+      - ch
+      - de
+      - ie
+      - nl
+    index: '{{ tenant }}_prd_stb_cm_topology_correlation'
+    kafka_topics:
+      - odhat_pr_hrzgo_{{ tenant }}_prd_stb_cm_topology_log_v1
+  - name: ingest-samknows-averagejoe
+    tenants:
+      - pl
+    index: '{{ tenant }}_prd_ingest_samknows_averagejoe'
+    kafka_topics:
+      - odhat_pr_wifi_{{ tenant }}_prd_ingest_samknows_averagejoe_v1
+
+  - name: ingest-samknows-dns
+    tenants:
+      - ro
+    index: odhat_wifi_{{ tenant }}_prd_ingest_samknows_dns_perf
+    kafka_topics:
+      - odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_dns_perf_v1
+
+  - name: ingest-samknows-responsetime
+    tenants:
+      - ro
+    index: odhat_wifi_{{ tenant }}_prd_ingest_samknows_responsetime_perf
+    kafka_topics:
+      - odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_responsetime_perf_v1
+
+  - name: isam4mobile_events
+    tenants:
+      - pan
+    index: '{{ tenant }}_isam4mobile_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_isam4mobile_ingested_metadata_syslog_v1
+
+  - name: modem_group_gen
+    tenants:
+      - de
+      - nl
+      - pl
+    index: wifi_{{tenant}}_prd_modem_group_perf
+    kafka_topics:
+      - odhat_out_wifi_{{tenant}}_prd_modem_group_perf_v1
+
+  - name: national-cpe-stats
+    tenants:
+      - gb
+    index: '{{ tenant }}_prd_national_cpe_stats'
+    kafka_topics:
+      - odhat_pr_wifi_{{ tenant }}_prd_national_cpe_stats_v1
+
+  - name: nsi_events
+    tenants:
+      - pan
+    index: '{{ tenant }}_nsi_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_nsi_ingested_metadata_log_v1
+
+      - odhat_pr_various_{{ tenant }}_prd_nsi_jboss_ingested_metadata_log_v1
+  - name: oag-log-parser
+    tenants:
+      - pan
+    index: odhat_various_{{ tenant }}_prd_oag_log
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_oag_log_v1
+
+  - name: oag_events
+    tenants:
+      - pan
+    index: '{{ tenant }}_oag_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_oag_ingested_metadata_log_v1
+
+  - name: odh_internal
+    tenants:
+      - pan
+    avg_message_size: 2000
+    index: '{{ tenant }}_odh_internal_logs'
+    kafka_topics:
+      - odhat_in_odh_{{ tenant }}_prd_internal_logs_v1
+    peak_rps: 100
+
+  - name: ovd_events
+    tenants:
+      - uk
+    index: '{{ tenant }}_ovd_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_ovd_ingested_metadata_log_v1
+
+  - name: peal-log-parser
+    tenants:
+      - ch
+      - de
+    index: '{{ tenant }}_prd_peal_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_peal_log_v1
+
+  - name: peal_events
+    tenants:
+      - ch
+      - de
+    index: '{{ tenant }}_peal_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_peal_ingested_metadata_log_v1
+
+  - name: plume_channel_changes
+    tenants:
+      - gb
+    index: '{{ tenant }}_plume_channel_changes'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_channel_changes_v1
+
+  - name: plume_client_stats
+    tenants:
+      - gb
+    index: '{{ tenant }}_plume_client_stats'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_client_stats_v1
+
+  - name: plume_effectiveness_stats
+    tenants:
+      - gb
+    index: '{{ tenant }}_plume_effectiveness_stats'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_effectiveness_stats_v1
+
+  - name: plume_modem_stats
+    tenants:
+      - gb
+    index: '{{ tenant }}_plume_modem_stats'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_modem_stats_v1
+
+  - name: pre-modem
+    tenants:
+      - pl
+    index: at_wifi_{{ tenant }}_pre_modem_v1
+    kafka_topics:
+      - at_in_wifi_{{ tenant }}_pre_modem_v1
+
+  - name: radius-log-aaa
+    tenants:
+      - pan
+    avg_message_size: 1000
+
+    index: at_in_wifi_{{ tenant }}_prd_radius_log_aaa_v1
+    kafka_topics:
+      - at_in_wifi_{{ tenant }}_prd_radius_log_aaa_v1
+    peak_rps: 2000
+  - name: raw_aem_events
+    tenants:
+      - at
+      - ch
+      - gb
+      - pan
+    index: raw_{{ tenant }}_prd_aem_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_aem_error_v1
+      - odhat_in_various_{{ tenant }}_prd_aem_log_v1
+
+
+  - name: raw_akana_events
+    tenants:
+      - de
+      - gb
+    index: raw_{{ tenant }}_prd_akana_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_akana_log_v1
+
+
+  - name: raw_auth_events
+    tenants:
+      - ch
+      - de
+    index: raw_{{ tenant }}_prd_auth_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_auth_handler_log_v1
+
+
+  - name: raw_capp_extrahop_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_extrahop_events
+    kafka_topics:
+      - odhat_in_capp_{{ tenant }}_prd_extrahop_tx_v1
+
+  - name: raw_fusion_events
+    tenants:
+      - uk
+    index: raw_{{ tenant }}_prd_fusion_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_fusion_log_v1
+
+
+  - name: raw_isam4mobile_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_isam4mobile_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_isam4mobile_syslog_v1
+
+
+  - name: raw_nsi_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_nsi_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_nsi_jboss_log_v1
+      - odhat_in_various_{{ tenant }}_prd_nsi_log_v1
+
+
+  - name: raw_oag_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_oag_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_oag_log_v1
+
+
+  - name: raw_ovd_events
+    tenants:
+      - gb
+    index: raw_{{ tenant }}_prd_ovd_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_ovd_log_v1
+
+
+  - name: raw_peal_events
+    tenants:
+      - ch
+      - de
+    index: raw_{{ tenant }}_prd_peal_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_peal_log_v1
+
+  - name: raw_uservices
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_uservices
+    kafka_topics:
+      - odhat_in_capp_{{ tenant }}_prd_heapp_uservices_logs_v1
+
+  - name: raw_uxp_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_uxp_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_uxp_log_v1
+
+
+  - name: raw_webseal_events
+    tenants:
+      - pan
+    index: raw_{{ tenant }}_prd_webseal_events
+    kafka_topics:
+      - odhat_in_various_{{ tenant }}_prd_webseal_syslog_v1
+
+  - name: rdkblab-modem
+    tenants:
+      - nl
+    index: odhat_rdkb_{{ tenant }}_prd_modem
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_modem_v1
+
+  - name: servassure-modem-poller
+    tenants:
+      - unknown
+    index: at_servassure_modem_poller_v1
+    kafka_topics:
+      - at_in_servassure_modem_poller_v1
+
+    # previous configuration didnt have a tenant and repairing the full chain is not within the scope of this hotfix
+  - name: spark_dead_letter_queue
+    tenants:
+      - pan
+    index: spark_dead_letter_queue
+    kafka_topics:
+      - odhat_pro_deadletterqueue
+
+  - name: spectrum-hex-datapoints
+    tenants:
+      - gb
+    index: '{{tenant}}_prd_ds_spectrum_hex_datapoints'
+    kafka_topics:
+      - odhat_pr_eosdtv_{{ tenant }}_prd_ds_spectrum_hex_datapoints_v1
+
+  - name: stb-error-parsing
+    tenants:
+      - ch
+      - de
+      - ie
+      - nl
+    index: odhat_wifi_{{ tenant }}_prd_stb_error_parsing
+    kafka_topics:
+      - odhat_out_wifi_{{ tenant }}_prd_stb_error_parsing_v1
+
+  - name: stb-modem-correlation
+    tenants:
+      - ch
+      - de
+      - ie
+      - nl
+    index: odhat_hrzgo_{{ tenant }}_prd_stb_modem_correlation
+    kafka_topics:
+      - odhat_pr_hrzgo_{{ tenant }}_prd_stb_modem_correlation_v1
+
+  - name: uxp-log-parser
+    tenants:
+      - pan
+    index: '{{ tenant }}_prd_uxp_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_uxp_log_v1
+
+  - name: uxp_events
+    tenants:
+      - pan
+    index: '{{ tenant }}_uxp_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_uxp_ingested_metadata_log_v1
+
+  - name: various_acs_booster_es_co_stats
+    tenants:
+      - de
+      - pl
+    index: '{{ tenant }}_prd_acs_booster_stats'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_acs_booster_stats_v1
+
+  - name: various_acs_cable_modem_es_co_stats
+    tenants:
+      - de
+      - pl
+    index: '{{ tenant }}_prd_acs_cable_modem_stats'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_acs_cable_modem_stats_v1
+
+  - name: various_akana_es_lp_report
+    tenants:
+      - de
+      - gb
+    index: '{{ tenant }}_prd_akana_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_akana_log_v1
+
+  - name: various_akana_raw_es_lp_report
+    tenants:
+      - de
+      - gb
+    index: '{{ tenant }}_prd_akana_raw_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_akana_raw_log_v1
+
+  - name: various_fusion_raw_es_lp_report
+    tenants:
+      - gb
+    index: '{{ tenant }}_prd_fusion_raw_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_fusion_raw_log_v1
+
+  - name: various_nsi_es_lp_report
+    tenants:
+      - pan
+    index: '{{ tenant }}_prd_nsi_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_nsi_log_v1
+
+  - name: various_webseal_raw_es_lp_report
+    tenants:
+      - pan
+    index: '{{ tenant }}_prd_webseal_raw_log'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_webseal_raw_syslog_v1
+
+  - name: webseal-log-parser
+    tenants:
+      - pan
+    index: '{{ tenant }}_prd_webseal_syslog'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_webseal_syslog_v1
+
+  - name: webseal_events
+    tenants:
+      - pan
+    index: '{{ tenant }}_webseal_events'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_webseal_ingested_metadata_syslog_v1
+
+  - name: wifi-accounting-stats
+    tenants:
+      - ch
+      - de
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+    index: '{{ tenant }}_prd_wifi_accounting_stats_perf'
+    kafka_topics:
+      - odhat_pr_wifi_{{ tenant }}_prd_wifi_accounting_stats_perf_v1
+
+  - name: wifi-authentication-stats
+    tenants:
+      - ch
+      - de
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+    index: odhat_wifi_{{ tenant }}_prd_wifi_authentication_stats_perf
+    kafka_topics:
+      - odhat_out_wifi_{{ tenant }}_prd_wifi_authentication_stats_perf_v1
+
+  - name: wifi_assurance_tivo
+    tenants:
+      - gb
+    index: '{{ tenant }}_wifi_assurance_tivo'
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_wifi_assurance_tivo_v1
+
+  - name: wifi_assurance_vd
+    tenants:
+      - gb
+    index: wifi_assurance_client_info_data
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_wifi_assurance_vd_v1

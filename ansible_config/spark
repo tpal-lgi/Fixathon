@@ -1,0 +1,1441 @@
+---
+spark_cluster: odhat
+kafka_output_topic_partitions: 3
+kafka_output_topic_replication_factor: 3
+
+spark_environment: prd
+spark_platform: eosdtv
+
+spark_jobs:
+  capp:
+    - name: lp_at
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - at
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_error_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_log_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_error_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_log_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+    - name: lp_ch
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - ch
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_error_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_auth_handler_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_peal_log_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_error_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_auth_handler_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_peal_ingested_metadata_log_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+    - name: lp_de
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - de
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_akana_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_auth_handler_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_peal_log_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_akana_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_auth_handler_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_peal_ingested_metadata_log_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+    - name: lp_gb
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - gb
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_error_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_akana_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_ovd_log_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_error_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_akana_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_ovd_ingested_metadata_log_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+    - name: lp_pan
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - pan
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_error_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_isam4mobile_syslog_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_nsi_jboss_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_nsi_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_oag_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_uxp_log_v1
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_webseal_syslog_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_error_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_isam4mobile_ingested_metadata_syslog_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_nsi_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_nsi_jboss_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_oag_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_uxp_ingested_metadata_log_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_webseal_ingested_metadata_syslog_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+    - name: lp_uk
+      image: '{{ spark.v2_3_1.docker_image }}'
+      tenants:
+        - uk
+      driver: '{{ spark.v2_3_1.dummy_driver }}'
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_fusion_log_v1
+      lang: scala
+      main_class: com.libertyglobal.medm.applications.logparsing.cisco.CappApplication
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_fusion_ingested_metadata_log_v1
+      packages:
+        - com.libertyglobal.medm:odh-scala-pipelines_2.11:1.1.0-20181005-112341
+      platform: various
+      task: marathon
+
+  connect_app:
+    - name: aem_log_parsing
+      image: lgi-docker.jfrog.io/libertyglobal/aem_log_parsing:1.5
+      tenants:
+        - ch
+        - de
+        - gb
+        - pan
+      configuration: aem_log_parser
+      driver: /odh-connectivity/spark/connect-app/aem_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_aem_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_aem_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: fusion_log_parsing
+      image: lgi-docker.jfrog.io/libertyglobal/fusion_log_parsing:1.3
+      tenants:
+        - gb
+      configuration: fusion_log_parser
+      driver: /odh-connectivity/spark/connect-app/fusion_log_parser.py
+      driver_memory_mb: 2048
+      executor_memory_mb: 4096
+      input:
+        - data_store: kafka
+          name: odhat_in_various_uk_prd_fusion_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_fusion_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: oag_log_parsing
+      image: '{{ lgi_registry }}/libertyglobal/oag_log_parsing:{{ oag_log_parsing_version }}'
+      tenants:
+        - pan
+      configuration: oag_log_parser
+      driver: /odh-connectivity/spark/connect-app/oag_log_parser.py
+      driver_memory_mb: 2048
+      executor_memory_mb: 4096
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_oag_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_oag_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: peal_log_parsing
+      image: lgi-docker.jfrog.io/libertyglobal/peal_log_parsing:1.1
+      tenants:
+        - ch
+        - de
+      configuration: peal_log_parser
+      driver: /odh-connectivity/spark/connect-app/peal_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_peal_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_peal_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: uxp_log_parsing
+      image: lgi-docker.jfrog.io/libertyglobal/uxp_log_parsing:1.4
+      tenants:
+        - pan
+      configuration: uxp_log_parser
+      driver: /odh-connectivity/spark/connect-app/uxp_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_uxp_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_uxp_log_v1
+      packages:
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      task: marathon
+    - name: various_akana_es_lp_report
+      image: '{{ lgi_registry }}/libertyglobal/akana_log_parsing:{{ akana_log_parsing_version }}'
+      tenants:
+        - de
+        - gb
+      configuration: spark_various_akana_es_lp_report
+      driver: /odh-connectivity/spark/connect-app/akana_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_akana_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_akana_log_v1
+      packages:
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      task: marathon
+    - name: various_akana_raw_es_lp_report
+      image: '{{ lgi_registry }}/libertyglobal/akana_raw_log_parsing:{{ akana_raw_log_parsing_version }}'
+      tenants:
+        - de
+        - gb
+      configuration: spark_various_akana_raw_es_lp_report
+      driver: /odh-connectivity/spark/connect-app/akana_raw_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_akana_log_v1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_akana_raw_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: various_fusion_raw_es_lp_report
+      image: '{{ lgi_registry }}/libertyglobal/fusion_raw_log_parsing:1.0'
+      tenants:
+        - gb
+      configuration: spark_various_fusion_raw_es_lp_report
+      driver: /odh-connectivity/spark/connect-app/fusion_raw_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_uk_prd_fusion_log_v1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_fusion_raw_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: various_nsi_es_lp_report
+      image: lgi-docker.jfrog.io/libertyglobal/nsi_log_parsing:1.3
+      tenants:
+        - pan
+      configuration: spark_various_nsi_es_lp_report
+      driver: /odh-connectivity/spark/connect-app/nsi_logs_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_nsi_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_nsi_log_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: various_webseal_raw_es_lp_report
+      image: '{{ lgi_registry }}/libertyglobal/webseal_raw_log_parsing:1.1'
+      tenants:
+        - pan
+      configuration: spark_various_webseal_raw_es_lp_report
+      driver: /odh-connectivity/spark/connect-app/webseal_raw_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_webseal_syslog_v1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_webseal_raw_syslog_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: webseal_log_parser
+      image: lgi-docker.jfrog.io/libertyglobal/webseal_log_parser:1.2
+      tenants:
+        - pan
+      configuration: webseal_log_parser
+      driver: /odh-connectivity/spark/connect-app/webseal_log_parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_webseal_syslog_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_webseal_syslog_v1
+      packages:
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      task: marathon
+
+  cowifi:
+    - name: cowifi_advanced_reports
+      image: '{{ lgi_registry }}/libertyglobal/spark_cowifi_advreport:1.2'
+      tenants:
+        - gb
+      configuration: cowifi_advanced_reports
+      driver: /odh-connectivity/spark/cowifi_advanced_reports/cowifi_advanced_reports.py
+      driver_memory_mb: 512
+      executor_cores: 2
+      executor_cores_max: 8
+      executor_memory_mb: 2048
+      input:
+        - data_store: hdfs
+          name: raw/cowifi/cowifi_advanced_reports/1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_cowifi_advanced_reports_v1
+      packages:
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T06:00:00.000Z/P1D
+      task: chronos
+
+  mv2_rdk_b:
+    - name: rdk_b_data_parser
+      image: lgi-docker.jfrog.io/libertyglobal/mv2-rdk-b:1.2
+      tenants:
+        - nl
+      configuration: mv2-rdk-b-data-parser
+      driver: /odh-connectivity/spark/mv2-rdk-b/mv2-rdk-b-data-parser.py
+      input:
+        - data_store: kafka
+          name: odhat_in_various_{{ tenant }}_prd_modem_v1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_modem_v1
+      packages:
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+
+  plume:
+    - name: plume_optimization_effectiveness
+      image: '{{ lgi_registry }}/libertyglobal/plume_optimization_effectiveness:1.0'
+      tenants:
+        - gb
+      configuration: spark_connectivity_plume_effectiveness_es_co_1d_flat
+      driver: /odh-connectivity/spark/plume/plume_effectiveness_stats.py
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8192
+      input:
+        - data_store: hdfs
+          name: raw/plume/interferenceduringhighload/*/1/
+        - data_store: hdfs
+          name: odhservassure/plume/type=datawarehouse-data/environment=prod/deployment=theta/table=channel_change/
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_effectiveness_stats_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_effectiveness_metrics_v1
+      packages:
+        - com.databricks:spark-avro_2.11:4.0.0
+      schedule: R/{{ ansible_date_time.date }}T06:00:00.000Z/P1D
+      task: chronos
+
+  samknows:
+    - name: ingest-averagejoe
+      image: '{{ lgi_registry }}/libertyglobal/generic_cassandra_to_kafka:{{ cassandra_to_kafka_version }}'
+      tenants:
+        - pl
+      configuration: ingest_samknows_averagejoe
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_ingest_samknows_averagejoe_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T06:30:00.000Z/P1D
+      task: chronos
+    - name: ingest-averagejoe_catchup
+      image: '{{ lgi_registry }}/libertyglobal/cassandra_to_kafka_catchup:{{ cassandra_to_kafka_catchup_version }}'
+      tenants:
+        - pl
+      configuration: ingest_samknows_averagejoe_catchup
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka_catchup.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_ingest_samknows_averagejoe_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T22:30:00.000Z/P1M
+      task: chronos
+    - name: ingest_dns
+      image: '{{ lgi_registry }}/libertyglobal/generic_cassandra_to_kafka:{{ cassandra_to_kafka_version }}'
+      tenants:
+        - ro
+      configuration: ingest_samknows_dns
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_dns_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T06:00:00.000Z/P1D
+      task: chronos
+    - name: ingest_dns_catchup
+      image: '{{ lgi_registry }}/libertyglobal/cassandra_to_kafka_catchup:{{ cassandra_to_kafka_catchup_version }}'
+      tenants:
+        - ro
+      configuration: ingest_samknows_dns_catchup
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka_catchup.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_dns_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T22:00:00.000Z/P1M
+      task: chronos
+    - name: ingest_responsetime
+      image: '{{ lgi_registry }}/libertyglobal/generic_cassandra_to_kafka:{{ cassandra_to_kafka_version }}'
+      tenants:
+        - ro
+      configuration: ingest_samknows_responsetime
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_responsetime_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T06:15:00.000Z/P1D
+      task: chronos
+    - name: ingest_responsetime_catchup
+      image: '{{ lgi_registry }}/libertyglobal/cassandra_to_kafka_catchup:{{ cassandra_to_kafka_catchup_version }}'
+      tenants:
+        - ro
+      configuration: ingest_samknows_responsetime_catchup
+      driver: /odh-connectivity/spark/cassandra-to-kafka/cassandra_to_kafka_catchup.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_ingest_samknows_responsetime_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T22:15:00.000Z/P1M
+      task: chronos
+
+  servassure:
+    - name: cm_attr_stats
+      image: lgi-docker.jfrog.io/libertyglobal/cm_attr_stats:1.2
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T10:15:00.000Z/P1D
+        - hu:
+            schedule: R/{{ ansible_date_time.date }}T10:30:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T10:45:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T11:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T11:15:00.000Z/P1D
+        - ro:
+            schedule: R/{{ ansible_date_time.date }}T11:30:00.000Z/P1D
+        - sk:
+            schedule: R/{{ ansible_date_time.date }}T11:45:00.000Z/P1D
+      configuration: cm_attr_stats
+      driver: /odh-connectivity/spark/cm-attr-stats/cm_attr_stats.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_cm_attr_stats_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+      schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+      task: chronos
+    - name: cm_attr_stats_catchup
+      image: lgi-docker.jfrog.io/libertyglobal/cm_attr_stats_catchup:1.0
+      tenants:
+        - ch
+        - de
+        - hu
+        - ie
+        - nl
+        - pl
+        - ro
+        - sk
+      configuration: cm_attr_stats_catchup
+      driver: /odh-connectivity/spark/cm-attr-stats/cm_attr_stats_catchup.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_cm_attr_stats_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+      schedule: R/{{ ansible_date_time.date }}T07:15:00.000Z/P1M
+      task: chronos
+    - name: community_wifi_graphite_ba_1d_stats
+      image: '{{ lgi_registry }}/libertyglobal/spark_community_wifi_graphite_ba_1d_stats:{{ community_wifi_graphite_ba_1d_stats_version }}'
+      tenants:
+        - at:
+            schedule: R/{{ ansible_date_time.date }}T07:00:00.000Z/P1D
+        - be:
+            schedule: R/{{ ansible_date_time.date }}T07:15:00.000Z/P1D
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T07:30:00.000Z/P1D
+        - cz:
+            schedule: R/{{ ansible_date_time.date }}T07:45:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T08:00:00.000Z/P1D
+        - gb:
+            schedule: R/{{ ansible_date_time.date }}T08:15:00.000Z/P1D
+        - hu:
+            schedule: R/{{ ansible_date_time.date }}T08:30:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T08:45:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T09:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T09:15:00.000Z/P1D
+        - ro:
+            schedule: R/{{ ansible_date_time.date }}T09:30:00.000Z/P1D
+        - sk:
+            schedule: R/{{ ansible_date_time.date }}T09:45:00.000Z/P1D
+        - us:
+            schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+      configuration: spark_community_wifi_graphite_ba_1d_stats
+      driver: /odh-connectivity/spark/wifi-authentication-stats/community_wifi_graphite_ba_1d_stats.py
+      executor_cores_max: 4
+      executor_memory_mb: 2048
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_wifi_accounting_graphite_stats_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T07:00:00.000Z/P1D
+      task: chronos
+    - name: connectivity_servassure_macbased_es_co_1d_report
+      image: '{{ lgi_registry }}/libertyglobal/spark_servassure_macbased:1.7'
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T16:30:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T19:00:00.000Z/P1D
+        - hu:
+            schedule: R/{{ ansible_date_time.date }}T16:00:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T15:30:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T18:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+        - ro:
+            schedule: R/{{ ansible_date_time.date }}T15:00:00.000Z/P1D
+        - sk:
+            schedule: R/{{ ansible_date_time.date }}T14:30:00.000Z/P1D
+      configuration: spark_connectivity_servassure_macbased_es_co_1d_report
+      driver: /odh-connectivity/spark/servassure/servassure_macbased.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_connectivity_{{ tenant }}_prd_servassure_macbased_log_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T14:00:00.000Z/P1D
+      task: chronos
+    - name: ds-spectrum-hex-datapoints
+      image: lgi-docker.jfrog.io/libertyglobal/ds_spectrum_hex_datapoints:1.0
+      tenants:
+        - gb
+      configuration: ds_spectrum_hex_datapoints
+      driver: /odh-connectivity/spark/ds-spectrum/ds_spectrum_hex_datapoints.py
+      input:
+        - data_store: cassandra
+          name: ds_spectrum_hex_{{ tenant }}
+      lang: python
+      output:
+        - data_store: cassandra
+          name: ds_spectrum_datapoints_{{ tenant }}
+        - data_store: kafka
+          name: odhat_pr_eosdtv_{{ tenant }}_prd_ds_spectrum_hex_datapoints_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+      schedule: R/{{ ansible_date_time.date }}T07:00:00.000Z/P1D
+      task: chronos
+    - name: eos_stb_modem_es_co_report
+      image: lgi-docker.jfrog.io/libertyglobal/eos_stb_modem_correlation:1.2
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: spark_eos_stb_modem_co_report
+      driver: /odh-connectivity/spark/stb-correlation/eos_stb_modem_correlation.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_network_{{ tenant }}_prod_f5_multitenant_correlation_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+      task: chronos
+    - name: extrahop_connectivity_tr069_acs_es_co_1d_report
+      image: '{{ lgi_registry }}/libertyglobal/extrahop_connectivity_tr069_acs_stats:1.3'
+      tenants:
+        - pan
+      configuration: spark_extrahop_connectivity_tr069_acs_es_co_1d_report
+      driver: /odh-connectivity/spark/extrahop-acs/extrahop_connectivity_tr069_acs_stats.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_in_connectivity_{{ tenant }}_prd_extrahop_acstr069_correlation_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T04:00:00.000Z/P1D
+      task: chronos
+    - name: extrahop_connectivity_tr069_acs_flat
+      image: lgi-docker.jfrog.io/libertyglobal/extrahop_connectivity_tr069_acs:1.1
+      tenants:
+        - pan
+      configuration: spark_connectivity_extrahop_acs_tr069_cassandra_lp
+      driver: /odh-connectivity/spark/extrahop-acs/extrahop_connectivity_tr069_acs.py
+      input:
+        - data_store: kafka
+          name: odhat_in_connectivity_{{ tenant }}_prd_extrahop_acstr69_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: extrahop_stberrors
+      image: lgi-docker.jfrog.io/libertyglobal/generic_kafka_to_cassandra:1.4
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: extrahop_stberrors
+      driver: /odh-connectivity/spark/kafka_to_cassandra/kafka_to_cassandra.py
+      input:
+        - data_store: kafka
+          name: odhat_in_network_{{ tenant }}_prd_extrahop_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.0
+      task: marathon
+    - name: hrzgo_stb_cm_topology_es_co_1d_report
+      image: '{{ lgi_registry }}/libertyglobal/stb_cm_topology_correlation:1.0'
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: spark_hrzgo_stb_cm_topology_es_co_1d_report
+      driver: /odh-connectivity/spark/connect-app/stb_cm_topology_correlation.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_hrzgo_{{ tenant }}_prd_stb_cm_topology_log_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+      task: chronos
+    - name: ingest_cmts_stats
+      image: lgi-docker.jfrog.io/libertyglobal/spark_cmts_ingest:1.12
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T16:30:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T19:00:00.000Z/P1D
+        - hu:
+            schedule: R/{{ ansible_date_time.date }}T16:00:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T15:30:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T18:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+        - ro:
+            schedule: R/{{ ansible_date_time.date }}T15:00:00.000Z/P1D
+        - sk:
+            schedule: R/{{ ansible_date_time.date }}T14:30:00.000Z/P1D
+      configuration: ingest_cmts_stats
+      driver: /odh-connectivity/spark/cmts-stats/cmts_stats.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_modem_cmts_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T15:00:00.000Z/P1D
+      task: chronos
+    - name: ingest_cmts_stats_catchup
+      image: lgi-docker.jfrog.io/libertyglobal/cmts_stats_data_catchup:1.12
+      tenants:
+        - ch
+        - de
+        - hu
+        - ie
+        - nl
+        - pl
+        - ro
+        - sk
+      configuration: ingest_cmts_stats_catchup
+      driver: /odh-connectivity/spark/cmts-stats/ingest_cmts_stats_catchup.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_modem_cmts_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T03:00:00.000Z/P1M
+      task: chronos
+    - name: ingest_community_wifi
+      image: lgi-docker.jfrog.io/libertyglobal/spark_community_wifi:1.5
+      tenants:
+        - pan
+      configuration: community_wifi
+      driver: /odh-connectivity/spark/community-wifi/community_wifi_parser.py
+      input:
+        - data_store: kafka
+          name: at_in_wifi_{{ tenant }}_prd_radius_log_aaa_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.0
+      task: marathon
+    - name: ingest_community_wifi_es_co_1d_stats
+      image: '{{ lgi_registry }}/libertyglobal/spark_ingest_community_wifi_stats:{{ ingest_community_wifi_es_co_1d_stats_version }}'
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T11:00:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T11:15:00.000Z/P1D
+        - hu:
+            schedule: R/{{ ansible_date_time.date }}T11:30:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T11:45:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T12:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T12:15:00.000Z/P1D
+        - ro:
+            schedule: R/{{ ansible_date_time.date }}T12:30:00.000Z/P1D
+        - sk:
+            schedule: R/{{ ansible_date_time.date }}T12:45:00.000Z/P1D
+      configuration: spark_ingest_community_wifi_stats
+      driver: /odh-connectivity/spark/wifi-authentication-stats/community_wifi_stats.py
+      executor_cores_max: 4
+      executor_memory_mb: 2048
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_wifi_authentication_stats_perf_v1
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_wifi_accounting_stats_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+      task: chronos
+    - name: ingest_modem_group
+      image: lgi-docker.jfrog.io/libertyglobal/spark_modem_group:1.9
+      tenants:
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T20:00:00.000Z/P1D
+        - pl:
+            schedule: R/{{ ansible_date_time.date }}T17:30:00.000Z/P1D
+      configuration: ingest_modem_group
+      driver: /odh-connectivity/spark/modem-group/modem_group.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{tenant}}_prd_modem_group_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T20:00:00.000Z/P1D
+      task: chronos
+    - name: ingest_modem_group_catchup
+      image: lgi-docker.jfrog.io/libertyglobal/modem_group_data_catchup:1.2
+      tenants:
+        - de
+        - pl
+      configuration: ingest_modem_group_catchup
+      driver: /odh-connectivity/spark/modem-group/ingest_modem_group_catchup.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{tenant}}_prd_modem_group_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T05:00:00.000Z/P1M
+      task: chronos
+    - name: ingest_stb_data
+      image: lgi-docker.jfrog.io/libertyglobal/ingest_stb_data:1.0
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: ingest_stb_data
+      driver: /odh-connectivity/spark/stb-correlation/ingest_stb_data.py
+      input:
+        - data_store: kafka
+          name: odhat_in_hrzgo_{{ tenant }}_prd_stb_servassure_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: ingest_stb_eos_cassandra_co_flat
+      image: lgi-docker.jfrog.io/libertyglobal/ingest_stb_eos_data:1.1
+      tenants:
+        - pan
+      configuration: spark_stb_eos_cassandra_co_flat
+      driver: /odh-connectivity/spark/stb-correlation/ingest_stb_eos_data.py
+      input:
+        - data_store: kafka
+          name: odhecx_in_network_{{ tenant }}_prod_f5_multitenant_log_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: ingest_v6_acs_data
+      image: lgi-docker.jfrog.io/libertyglobal/stbp_v6_acs:1.5
+      tenants:
+        - gb
+      configuration: ingest_v6_acs_data
+      driver: /odh-connectivity/spark/v6-acs/ingest_v6_acs_data.py
+      input:
+        - data_store: kafka
+          name: odhat_in_eosdtv_{{ tenant }}_prd_tivo_v6_acs_v1
+      lang: python
+      output:
+        - data_store: cassandra
+          name: odhservassure
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      task: marathon
+    - name: ingest_wifi_authentication_stats_catchup
+      image: '{{ lgi_registry }}/libertyglobal/spark_wifi_authentication_stats_catchup:{{ ingest_wifi_authentication_stats_version_catchup }}'
+      tenants:
+        - ch
+        - de
+        - hu
+        - ie
+        - nl
+        - pl
+        - ro
+        - sk
+      configuration: ingest_wifi_authentication_stats_catchup
+      driver: /odh-connectivity/spark/wifi-authentication-stats/wifi_authentication_stats.py
+      executor_cores_max: 4
+      executor_memory_mb: 2048
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_wifi_authentication_stats_perf_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T23:00:00.000Z/P1M
+      task: chronos
+    - name: leasedb_parser
+      image: lgi-docker.jfrog.io/libertyglobal/leasedb_parsing:1.1
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: leasedb_parser
+      driver: /odh-connectivity/spark/stb-error-parsing/leasedb_parser.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_leasedb_parsing_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+      schedule: R/{{ ansible_date_time.date }}T22:30:00.000Z/P1D
+      task: chronos
+    - name: plume_mac_based_stats
+      image: '{{ lgi_registry }}/libertyglobal/plume_mac_based_stats:1.0'
+      tenants:
+        - gb
+      configuration: spark_connectivity_plume_mac_based_es_co_1h_stats
+      driver: /odh-connectivity/spark/plume/plume_mac_based_stats.py
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 2048
+      input:
+        - data_store: hdfs
+          name: odhservassure/plume/type=datawarehouse-data/environment=prod/deployment=theta
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_channel_changes_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_modem_stats_v1
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_client_stats_v1
+      packages:
+        - com.databricks:spark-avro_2.11:4.0.0
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T{{ ansible_date_time.time }}.000Z/PT60M
+      task: chronos
+    - name: stb_error_parsing
+      image: '{{ lgi_registry }}/libertyglobal/stb_error_parsing:{{ stb_error_parsing_version }}'
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T17:30:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T19:30:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T16:30:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T18:30:00.000Z/P1D
+      configuration: stb_error_parsing
+      driver: /odh-connectivity/spark/stb-error-parsing/stb_error_parsing.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_stb_error_parsing_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T18:00:00.000Z/P1D
+      task: chronos
+    - name: stb_error_parsing_catchup
+      image: '{{ lgi_registry }}/libertyglobal/stb_error_parsing_catchup:{{ stb_error_parsing_catchup_version }}'
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: stb_error_parsing_catchup
+      driver: /odh-connectivity/spark/stb-error-parsing/stb_error_parsing_catchup.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_out_wifi_{{ tenant }}_prd_stb_error_parsing_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T22:30:00.000Z/P1M
+      task: chronos
+    - name: stb_modem_correlation
+      image: '{{ lgi_registry }}/libertyglobal/stb_correlation:{{ stb_modem_correlation_version }}'
+      tenants:
+        - ch:
+            schedule: R/{{ ansible_date_time.date }}T18:00:00.000Z/P1D
+        - de:
+            schedule: R/{{ ansible_date_time.date }}T20:00:00.000Z/P1D
+        - ie:
+            schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+        - nl:
+            schedule: R/{{ ansible_date_time.date }}T19:00:00.000Z/P1D
+      configuration: stb_modem_correlation
+      driver: /odh-connectivity/spark/stb-correlation/stb_modem_correlation.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_hrzgo_{{ tenant }}_prd_stb_modem_correlation_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T17:00:00.000Z/P1D
+      task: chronos
+    - name: stb_modem_correlation_catchup
+      image: '{{ lgi_registry }}/libertyglobal/stb_correlation_data_catchup:{{ stb_modem_correlation_catchup_version }}'
+      tenants:
+        - ch
+        - de
+        - ie
+        - nl
+      configuration: stb_modem_correlation_catchup
+      driver: /odh-connectivity/spark/stb-correlation/stb_modem_correlation_catchup.py
+      driver_memory_mb: 2000
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8000
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_hrzgo_{{ tenant }}_prd_stb_modem_correlation_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T21:00:00.000Z/P1M
+      task: chronos
+    - name: tivo_v6_acs_es_co_stats
+      image: lgi-docker.jfrog.io/libertyglobal/v6_acs_correlation:1.3
+      tenants:
+        - gb
+      configuration: spark_connectivity_tivo_v6_acs_es_co_1d_stats
+      driver: /odh-connectivity/spark/v6-acs/v6_acs_correlation_stats.py
+      driver_memory_mb: 2048
+      executor_cores_max: 8
+      executor_memory_mb: 8192
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_eosdtv_{{ tenant }}_prd_tivo_v6_acs_v1
+        - data_store: hdfs
+          name: odhservassure/tivo-v6-acs/output
+      schedule: R/{{ ansible_date_time.date }}T03:00:00.000Z/P1D
+      task: chronos
+    - name: various_acs_booster_es_co_stats
+      image: '{{ lgi_registry }}/libertyglobal/acs_booster_stats:1.3'
+      tenants:
+        - de
+        - pl
+      configuration: spark_various_acs_booster_es_co_stats
+      driver: /odh-connectivity/spark/v6-acs/acs_booster_stats.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_acs_booster_stats_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T12:00:00.000Z/P1D
+      task: chronos
+    - name: various_acs_cable_modem_es_co_stats
+      image: '{{ lgi_registry }}/libertyglobal/acs_cable_modem_stats:1.4'
+      tenants:
+        - de
+        - pl
+      configuration: spark_various_acs_cable_modem_es_co_stats
+      driver: /odh-connectivity/spark/v6-acs/acs_cable_modem_stats.py
+      input:
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_acs_cable_modem_stats_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T11:00:00.000Z/P1D
+      task: chronos
+    - name: wifi_plume_snmp_graphite_1h_ba_report
+      image: '{{ lgi_registry }}/libertyglobal/plume_snmp_correlation_stats:1.1'
+      tenants:
+        - gb
+      configuration: spark_wifi_plume_snmp_graphite_1h_ba_report
+      driver: /odh-connectivity/spark/plume/plume_snmp_correlation_stats.py
+      input:
+        - data_store: hdfs
+          name: odhservassure/plume/type=datawarehouse-data/environment=prod/deployment=theta
+        - data_store: cassandra
+          name: inhome_gb
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_plume_snmp_wifi_kpi_v1
+      packages:
+        - com.databricks:spark-avro_2.11:4.0.0
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T{{ ansible_date_time.time }}.000Z/PT60M
+      task: chronos
+
+  superpoller:
+    - name: connectivity_superpoller_frequency_stats_es_co_1h_report
+      image: '{{ lgi_registry }}/libertyglobal/superpoller_frequency_stats:1.3'
+      tenants:
+        - gb
+      configuration: spark_connectivity_superpoller_frequency_es_co_1h_stats
+      driver: /odh-connectivity/spark/superpoller-cpe-stats/superpoller_frequency_stats.py
+      input:
+        - data_store: hdfs
+          name: superpoller/hourly/
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_connectivity_{{ tenant }}_prd_superpoller_ds_stats_log_v1
+        - data_store: kafka
+          name: odhat_pr_connectivity_{{ tenant }}_prd_superpoller_us_stats_log_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-sql-kafka-0-10_2.11:2.2.0
+      schedule: R/{{ ansible_date_time.date }}T{{ ansible_date_time.time }}.000Z/PT60M
+      task: chronos
+    - name: national_cpe_stats
+      image: lgi-docker.jfrog.io/libertyglobal/national_cpe_stats:1.2
+      tenants:
+        - gb
+      configuration: national_cpe_stats
+      driver: /odh-connectivity/spark/superpoller-cpe-stats/national_cpe_stats.py
+      input:
+        - data_store: hdfs
+          name: odhservassure/superpoller-cpe-stats/input/
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_national_cpe_stats_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+      schedule: R/{{ ansible_date_time.date }}T08:00:00.000Z/P1D
+      task: chronos
+    - name: national_cpe_stats_catchup
+      image: lgi-docker.jfrog.io/libertyglobal/national_cpe_stats_catchup:1.0
+      tenants:
+        - gb
+      configuration: national_cpe_stats_catchup
+      driver: /odh-connectivity/spark/superpoller-cpe-stats/national_cpe_stats_catchup.py
+      input:
+        - data_store: hdfs
+          name: odhservassure/superpoller-cpe-stats/input/
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_wifi_{{ tenant }}_prd_national_cpe_stats_v1
+      packages:
+        - anguenot:pyspark-cassandra:0.7.0
+      schedule: R/{{ ansible_date_time.date }}T08:00:00.000Z/P1M
+      task: chronos
+
+  tivo:
+    - name: acs_compass_es_co_report
+      image: '{{ lgi_registry }}/libertyglobal/acs_compass_es_co_report:0.11'
+      tenants:
+        - gb
+      configuration: acs_compass_es_co_report
+      driver: /odh-connectivity/spark/acs_compass_es_co_report/acs_compass_es_co_report.py
+      driver_memory_mb: 512
+      executor_cores: 2
+      executor_cores_max: 6
+      executor_memory_mb: 8192
+      input:
+        - data_store: hdfs
+          name: raw/compass/stbp/1
+        - data_store: hdfs
+          name: raw/compass/stbp_tuner/1
+        - data_store: hdfs
+          name: raw/compass/stb_event_log/1
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_prd_acs_compass_report_v1
+      packages:
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+      task: chronos
+
+  wifi_assurance:
+
+    - name: wifi_assurance_tivo
+      image: '{{ lgi_registry }}/libertyglobal/spark_wa_tivo:1.31'
+      tenants:
+        - gb
+      configuration: wifi_assurance_tivo
+      driver: /odh-connectivity/spark/wifi_assurance_tivo/wifi_assurance_tivo.py
+      driver_memory_mb: 1024
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8192
+      input:
+        - data_store: hdfs
+          name: raw/wifi/wifi_assurance/1
+        - data_store: hdfs
+          name: raw/acs/tivo_v6_acs/1
+        - data_store: hdfs
+          name: superpoller/hourly
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_wifi_assurance_tivo_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T14:00:00.000Z/P1D
+      task: chronos
+
+    - name: wifi_assurance_vd
+      image: '{{ lgi_registry }}/libertyglobal/spark_wa_vd:1.0'
+      tenants:
+        - gb
+      configuration: wifi_assurance_vd
+      driver: /odh-connectivity/spark/wifi_assurance_vd/wifi_assurance_vd.py
+      driver_memory_mb: 1024
+      executor_cores: 2
+      executor_cores_max: 16
+      executor_memory_mb: 8192
+      input:
+        - data_store: hdfs
+          name: raw/wifi/wifi_assurance/1
+        - data_store: cassandra
+          name: odhservassure
+      lang: python
+      output:
+        - data_store: kafka
+          name: odhat_pr_various_{{ tenant }}_wifi_assurance_vd_v1
+      packages:
+        - com.datastax.spark:spark-cassandra-connector_2.11:2.0.6
+        - org.apache.spark:spark-streaming-kafka-0-8_2.11:2.2.1
+      schedule: R/{{ ansible_date_time.date }}T10:00:00.000Z/P1D
+      task: chronos

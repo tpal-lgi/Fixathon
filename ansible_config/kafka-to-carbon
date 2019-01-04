@@ -1,0 +1,60 @@
+---
+# ODH-2011: This variable is used to split kafka-to-carbon
+# in 3 logstash-apps instances, waiting for ES6.
+# If one entry is not in the list, it won't be deployed
+logstash_apps_carbon_override_host: "{{ hostvars[groups['graphite-solo'][0]].net_internal_ip }}"
+logstash_apps_carbon_override_port: '{{ carbon_solo_port }}'
+
+kafka_to_carbon_topic_division:
+  0:
+    - community_wifi_graphite_ba_1d_stats
+    - plume-wifi-kpi-stats
+    - plume_effectiveness_metrics
+    - wifi_plume_snmp_graphite_1h_ba_report
+  1: []
+  2: []
+  3: []
+  4: []
+  5: []
+  6: []
+
+kafka_to_carbon_topic_metric_map_tenants:
+  - name: community_wifi_graphite_ba_1d_stats
+    tenants:
+      - at
+      - be
+      - ch
+      - cz
+      - de
+      - gb
+      - hu
+      - ie
+      - nl
+      - pl
+      - ro
+      - sk
+      - us
+    index: odhat.wifi.{{ tenant }}.prd.wifi.accounting.graphite.stats.perf
+    kafka_topics:
+      - odhat_pr_wifi_{{ tenant }}_prd_wifi_accounting_graphite_stats_perf_v1
+
+  - name: plume-wifi-kpi-stats
+    tenants:
+      - gb
+    index: odhat.various.{{ tenant }}.prd.plume.wifi.kpi
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_wifi_kpi_v1
+
+  - name: plume_effectiveness_metrics
+    tenants:
+      - gb
+    index: odhat.various.{{ tenant }}.prd.plume.effectiveness.metrics
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_effectiveness_metrics_v1
+
+  - name: wifi_plume_snmp_graphite_1h_ba_report
+    tenants:
+      - gb
+    index: odhat.various.{{ tenant }}.prd.plume_snmp.wifi.kpi
+    kafka_topics:
+      - odhat_pr_various_{{ tenant }}_prd_plume_snmp_wifi_kpi_v1
