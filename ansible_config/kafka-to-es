@@ -44,7 +44,7 @@ kafka_to_es_topic_division:
     - webseal-log-parser
     - webseal_events
   2:
-    - aem-log-parser
+    - aem-log-paring
     - aem_events
     - connectivity_superpoller_cpe_stats_es_co_1h_report
     - connectivity_superpoller_us_stats_es_co_1h_report
